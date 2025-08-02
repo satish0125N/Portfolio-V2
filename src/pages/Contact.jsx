@@ -13,22 +13,21 @@ const Contact = () => {
   const onSubmit = async (data) => {
     setIsSubmitting(true)
     try {
-      // Prepare the contact data
       const contactData = {
         name: data.name,
         email: data.email,
-        subject: data.subject || '',  // Handle optional subject
+        subject: data.subject || null, // Change empty string to null for optional field
         message: data.message
+        // Remove created_at as it's handled by default timestamp in the table
       }
 
-      // Send to database
       const result = await db.createContact(contactData)
       console.log('Contact submitted:', result)
       toast.success('Message sent successfully! I\'ll get back to you soon.')
       reset()
     } catch (error) {
       console.error('Error details:', error)
-      toast.error(error.message || 'Failed to send message. Please try again.')
+      toast.error('Failed to send message. Please try again.')
     } finally {
       setIsSubmitting(false)
     }
