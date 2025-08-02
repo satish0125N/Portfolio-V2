@@ -77,14 +77,25 @@ export const db = {
   },
 
   async createContact(contact) {
+    console.log('Attempting to create contact with data:', contact)
+    
+    // Ensure all required fields are present
+    if (!contact.name || !contact.email || !contact.message) {
+      throw new Error('Missing required fields: name, email, and message are required')
+    }
+    
     const { data, error } = await supabase
       .from('contacts')
       .insert([contact])
       .select()
-      .single()
     
-    if (error) throw error
-    return data
+    if (error) {
+      console.error('Supabase error:', error)
+      throw error
+    }
+    
+    console.log('Contact created successfully:', data)
+    return data?.[0] || data
   },
 
   async deleteContact(id) {
